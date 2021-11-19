@@ -3,12 +3,12 @@
 ## Development Instructions
 
 ### SQLite
- - Install SQLite, follow relevant instructions to do so on (Tutorialspoint)[https://www.tutorialspoint.com/sqlite/sqlite_installation.htm]
- - (Optional) Install SQLite Browser, to see your database in a clean, GUI format, with simple downloads (here)[https://sqlitebrowser.org/dl/]
+ - Install SQLite, follow relevant instructions to do so on [Tutorialspoint](https://www.tutorialspoint.com/sqlite/sqlite_installation.htm)
+ - [Optional] Install SQLite Browser, to see your database in a clean, GUI format, with simple downloads [here](https://sqlitebrowser.org/dl/)
  - SQLite is a serverless database that has all its information in a single file. It is very useful for simple SQL database applications.
 
 ### Postman
- - Install Postman, simple downloads (here)[https://www.postman.com/downloads/]
+ - Install Postman, simple downloads [here](https://www.postman.com/downloads/)
  - This enables you to easily test REST APIs with a clean GUI
 
 ## Running/Installation Instructions
