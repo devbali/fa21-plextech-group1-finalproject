@@ -1,8 +1,8 @@
 from flask import Flask
 import sqlite3
-
 import os.path
 import os
+import uuid
 
 BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 db_path = os.path.join(BASE_DIR, "officehours.db")
@@ -18,8 +18,12 @@ def after_request(response):
     header["Content-Type"] = "text/json"
     return response
 
-@app.route("/<pathvariable>")
-def hello_world(pathvariable):
+@app.route("/")
+def helloworld():
+    return "Hello World. Use /<some string> for more."
+
+@app.route("/<pathvariable>", methods=['GET'])
+def somevar(pathvariable):
     # Example method that reads from database
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
@@ -27,7 +31,7 @@ def hello_world(pathvariable):
     print(users)
     # See https://docs.python.org/3/library/sqlite3.html for more
 
-    return f"<p>Hello, World! We have {users[0]} users. You used path variable {pathvariable}.</p>"
+    return f"Hello, World! We have {users[0]} users. You used path variable {pathvariable}. Random UUID: {uuid.uuid4()}"
 
 if __name__ == '__main__':
     app.run(host='localhost', debug=True, port=5000)
