@@ -20,9 +20,9 @@ def after_request(response):
 
 @app.route("/")
 def helloworld():
-    return "Hello World. Use /<some string> for more."
+    return "Hello World. Use /test/<some string> for more."
 
-@app.route("/<pathvariable>", methods=['GET'])
+@app.route("/test/<pathvariable>", methods=['GET','PUT'])
 def somevar(pathvariable):
     # Example method that reads from database
     with sqlite3.connect(db_path) as con:
@@ -32,6 +32,64 @@ def somevar(pathvariable):
     # See https://docs.python.org/3/library/sqlite3.html for more
 
     return f"Hello, World! We have {users[0]} users. You used path variable {pathvariable}. Random UUID: {uuid.uuid4()}"
+
+@app.route("/user/<token>", methods=['GET'])
+def get_user(token):
+    pass
+    # Not for right now
+
+@app.route("/user", methods=['POST', 'PUT'])
+def create_user_settings():
+    # Request Body: user occupation, user email, user classes (as a list)
+    pass
+    # Eugene
+
+@app.route("/meeting", methods=['POST', 'PUT'])
+def create_meeting():
+    # Request Body: datetimes (start and end), title, user id, location, class_id, capacity, type
+    pass
+    # Rhythm
+
+@app.route("/meeting/<meeting_id>", methods=['GET'])
+def get_meeting():
+    # Request parameter: meeting_id
+    # user_id = slkdl
+    pass
+    # Rhythm
+
+@app.route("/meeting/<meeting_id>", methods=['DELETE'])
+def remove_meeting(meeting_id):
+    # Request Body: datetimes (start and end), title, user id, location, class_id, capacity, type
+    pass
+    # Rhythm
+
+@app.route("/meetings", methods=['GET'])
+def show_all_meetings():
+    # Request query: datetimes (start and end)
+    # Response: meetings, and whether the user is already registered for them
+    pass
+    # Rohan
+
+@app.route("/appointment/<meeting_id>", methods=['GET'])
+def get_appointment():
+    # Request parameter: meeting_id
+    # user_id = slkdl
+    pass
+    # Adhiraj
+
+@app.route("/appointment/<meeting_id>", methods=['POST'])
+def book_appointment():
+    # Request parameter: meeting_id
+    # user_id = slkdl
+    pass
+    # Adhiraj
+
+@app.route("/appointment/<meeting_id>", methods=['DELETE'])
+def cancel_appointment():
+    # Request parameter: meeting_id
+    # user_id = slkdl
+    pass
+    # Adhiraj
 
 if __name__ == '__main__':
     app.run(host='localhost', debug=True, port=5000)
