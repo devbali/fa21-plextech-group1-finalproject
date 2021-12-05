@@ -67,7 +67,35 @@ def remove_meeting(meeting_id):
 def show_all_meetings():
     # Request query: datetimes (start and end)
     # Response: meetings, and whether the user is already registered for them
-    pass
+    meetings = {}
+    current_user = request.args.get('user_id')
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
+    #get the ids for all meetings where the user is registered through relational table query
+    meeting_ids = cur.execute("SELECT meeting_id FROM user_meeting WHERE user_id = current_user;").fetchall()
+    meeting_info = cur.execute("SELECT title, location, date_time_start, date_time_end, meeting_id, users.name FROM meetings, user_classes, users WHERE meetings.class_id = user_classes.class_id AND user_classes.user_id = current_user AND users.user_id = leader_id").fetchall()
+    meeting_num = 1
+    #go through all meetings which pertain to the student/ta's relevant courses
+    for info in meeting_info:
+        leader_name = info['name']
+        meeting_title = info['title']
+        meeting_location = info['location']
+        start = info['date_time_start']
+        end = info['date_time_end']
+        meeting_capacity = info('capacity')
+        #change the registered atrribute baseed on whether the id of the meeting is within meeting_ids (determines if user is registered)
+        if any([info['meeting_id'] == id['meeting_id'] for id in meeting_ids ]):
+            meetings["meeting" + str(meeting_num)] = {'TA': leader_name, 'title': meeting_title, 'location' = meeting_location, 
+            'start_time': start, 'end_time': end, "capacity": meeting_capacity, "registered": True }
+        else:
+            meetings["meeting" + str(meeting_num)] = {'TA': leader_name, 'title': meeting_title, 'location' = meeting_location, 
+            'start_time': start, 'end_time': end, "capacity": meeting_capacity, "registered": False }
+        meeting_num += 1
+    return meetings
+
+
+
+
     # Rohan
 
 @app.route("/appointment/<meeting_id>", methods=['GET'])
