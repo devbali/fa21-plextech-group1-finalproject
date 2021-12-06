@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import Schedule from './pages/schedule';
+/*import { FormDemo } from './pages/meeting';*/
 import React from "react";
 
 import {
@@ -9,11 +11,15 @@ import {
   Link
 } from "react-router-dom";
 
+import LoginPage from './pages/login';
+import TopBar from './components/TopBar';
+
 export default function App() {
   return (
     <Router>
       <div>
-        <ul>
+        <TopBar/>
+        {/*<ul>
           <li>
             <Link to="/">Home</Link>
           </li>
@@ -25,7 +31,7 @@ export default function App() {
           </li>
         </ul>
 
-        <hr />
+        <hr />*/}
 
         {/*
           A <Routes> looks through all its children <Routes>
@@ -36,7 +42,10 @@ export default function App() {
         */}
         <Routes>
           <Route exact path="/" element={<Home/>} />
-          <Route path="/about" element={<About/>}/>
+          <Route exact path="/login" element={<LoginPage/>} />
+          <Route path="/newuser" element={<NewUser/>}/>
+         <Route path="/schedule" element={<Schedule/>}/> 
+         { /*<Route path="/meeting" element={<FormDemo/>}/>*/}
           <Route path="/dashboard" element={<Dashboard/>}/>
         </Routes>
       </div>
@@ -55,10 +64,10 @@ function Home() {
   );
 }
 
-function About() {
+function NewUser() {
   return (
     <div>
-      <h2>About</h2>
+      <h2>Eugene's Page</h2>
     </div>
   );
 }
