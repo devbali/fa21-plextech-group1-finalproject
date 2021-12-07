@@ -41,7 +41,20 @@ def get_user(token):
 @app.route("/user", methods=['POST', 'PUT'])
 def create_user_settings():
     # Request Body: user occupation, user email, user classes (as a list)
-    pass
+    data = Flask.request.json
+    occupation = data['occupation']
+    email = data['email']
+    class_ids = data['class_ids']
+
+    with sqlite3.connect(db_path) as con:
+        try:
+            cur = con.cursor()
+            cur.execute("INSERT INTO user (occupation, email) VALUES (%s, %s)" %(occupation, email))
+            user_id = cur.execute("SELECT user_id FROM user WHERE email = (%s)" %(email))
+            cur.executemany("INSERT INTO user_class (class_id, user_id, role) VALUES (%s, %s, %s)" %(class_ids, user_id, occupation))
+            con.commit()
+        except:
+            return 403
     # Eugene
 
 @app.route("/meeting", methods=['POST', 'PUT'])
