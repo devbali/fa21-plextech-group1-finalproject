@@ -51,7 +51,8 @@ def create_user_settings():
             cur = con.cursor()
             cur.execute("INSERT INTO user (occupation, email) VALUES (%s, %s)" %(occupation, email))
             user_id = cur.execute("SELECT user_id FROM user WHERE email = (%s)" %(email))
-            cur.executemany("INSERT INTO user_class (class_id, user_id, role) VALUES (%s, %s, %s)" %(class_ids, user_id, occupation))
+            for class_id in class_ids:
+                cur.execute("INSERT INTO user_class (class_id, user_id, role) VALUES (%s, %s, %s)" %(class_id, user_id, occupation))
             con.commit()
         except:
             return 403
