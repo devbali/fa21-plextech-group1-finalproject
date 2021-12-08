@@ -55,7 +55,7 @@ def token_required(f):
 def after_request(response):
     header = response.headers
     header["Access-Control-Allow-Credentials"] =  True
-    header["Access-Control-Allow-Origin"] = "localhost:8080"
+    header["Access-Control-Allow-Origin"] = "http://localhost:8080"
     header["Access-Control-Allow-Headers"] = "*"
     header["Content-Type"] = "text/json"
     return response
