@@ -1,6 +1,7 @@
 import { Container, Grid } from "@mui/material";
 import React from "react";
 import Carde from "../components/Carde";
+import LandingPageNav from "../components/LandingPageNav";
 import GroupsIcon from '@mui/icons-material/Groups';
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
 import CalendarViewWeekIcon from '@mui/icons-material/CalendarViewWeek';
@@ -9,6 +10,7 @@ function Home() {
   return (
     //   wrapper
     <div>
+      <LandingPageNav />
       <div style={{ padding: "3rem" }}>
         {/* this is for content */}
         <div style={{ padding: "3rem" }}>

@@ -18,7 +18,7 @@ function Login() {
     refreshTokenSetup(res);
     console.log(history);
     if (location.state == undefined || location.state.referrer == undefined)
-      history("/dashboard");
+      history("/schedule");
     else
       history(location.state.referrer);
   };

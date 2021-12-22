@@ -13,9 +13,13 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { fetcher } from "../util/fetcher";
+import config from '../server-config';
+import { inMemoryUserManager } from "../util/fetcher";
+import NavBar from '../components/NavBar';
+
 
 function Register() {
-  // need to find way to receive user information from oauth2 process (dev)
   const [allCourses, setAllCourses] = useState([]);
   const history = useNavigate();
   const location = useLocation();
@@ -23,7 +27,15 @@ function Register() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("/classes")
+    // get user info to display onto registration page
+    // fetcher(config.serverurl)
+    // .then((res) => res.json())
+    // .then((data) => {
+    //   console.log(data);
+    // })
+  
+    // fetch classes in database
+    fetcher("/classes")
       .then((res) => res.json())
       .then((data) => {
         setAllCourses(data["result"]);
@@ -37,38 +49,39 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // fetch("/user", {
-    //   method: "PUT",
-    //   headers: {
-    //     content_type: "application/json",
-    //   },
-    //   // grab Request Body: user occupation, user email, user classes (as a list) and send it in a json object to our server
-    //   body: JSON.stringify(),
-    // })
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then((json) => {
-    //     // if success then send them to dashboard with their info
-    //     if (json[0] === "success") {
-    //       if (
-    //         location.state === undefined ||
-    //         location.state.referrer === undefined
-    //       )
-    //         history("/dashboard");
-    //       else history(location.state.referrer);
-    //     }
-    //     // if failure then refresh page with failure dialog
-    //   });
+    // put information into the database about the user and their class relationships
+    fetch("/user", {
+      method: "PUT",
+      headers: {
+        content_type: "application/json",
+      },
+      // grab Request Body: user occupation, user email, user classes (as a list) and send it in a json object to our server
+      body: JSON.stringify(),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        // if success then send them to dashboard with their info
+        if (json[0] === "success") {
+          if (
+            location.state === undefined ||
+            location.state.referrer === undefined
+          )
+            history("/dashboard");
+          else history(location.state.referrer);
+        }
+        // if failure then refresh page with failure dialog
+      });
   };
 
   return (
     <div style={{ padding: "2rem" }}>
+      <NavBar/>
       <div>
         <Card elevation={5} sx={{ maxWidth: 500, margin: "auto" }}>
           <CardContent>
-            {/* I want this h1 to have the first name of the user from the OAuth2 process */}
-            <h1 style={{ textAlign: "center" }}>Hi User,</h1>
+            <h1 style={{ textAlign: "center" }}>Hi{inMemoryUserManager.getUser() != null ? ` ${inMemoryUserManager.getUser()["profileObj"]["givenName"]}` : ""},</h1>
             <h3>Let's get started!</h3>
 
             <form id="register" onSubmit={handleSubmit}>

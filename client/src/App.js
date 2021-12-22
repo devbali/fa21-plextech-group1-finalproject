@@ -13,18 +13,18 @@ import Home from './pages/home';
 import LoginPage from './pages/login';
 // import NewUser from './pages/usersetup';
 // import Dashboard from './pages/dashboard';
-// import Schedule from './pages/schedule';
-/*import { FormDemo } from './pages/meeting';*/
+import Schedule from './pages/schedule';
+//import { FormDemo } from './pages/meeting';
 import NavBar from './components/NavBar';
 import Register from './pages/register';
 // import LoginPage from './components/Login';
 
-
 export default function App() {
   return (
+    
     <Router>
+
       <div>
-        <NavBar/>
         {/*<ul>
           <li>
             <Link to="/">Home</Link>
@@ -48,10 +48,11 @@ export default function App() {
         */}
         <Routes>
           <Route exact path="/" element={<Home/>} />
+          <Route exact path="/home" element={<Home/>} />
           <Route exact path="/login" element={<LoginPage/>} />
           <Route path="/register" element={<Register/>}/>
-         {/* <Route path="/schedule" element={<Schedule/>}/>  */}
-         { /*<Route path="/meeting" element={<FormDemo/>}/>*/}
+          <Route path="/schedule" element={<Schedule/>}/> 
+          {/* <Route path="/meeting" element={<FormDemo/>}/> */}
           {/* <Route path="/dashboard" element={<Dashboard/>}/> */}
         </Routes>
       </div>

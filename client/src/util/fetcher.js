@@ -24,6 +24,7 @@ export const inMemoryUserManager = inMemoryUserManagerFunc();
 function updateOptions(options) {
     const update = { ...options };
     let user = inMemoryUserManager.getUser()
+    console.log(user);
     if (user) {
       update.headers = {
         ...update.headers,

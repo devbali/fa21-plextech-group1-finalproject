@@ -43,8 +43,8 @@ def token_required(f):
                     con.commit()
                 else:
                     current_user["uninitialized"] = False
-                    current_user["id"] = users[0]["id"]
-                    current_user["occupation"] = users[0]["occupation"]
+                    current_user["id"] = users[0]
+                    current_user["occupation"] = users[1]
         
         if current_user["uninitialized"]:
             return redirect('/newuser')
@@ -60,9 +60,11 @@ def after_request(response):
     header["Content-Type"] = "text/json"
     return response
 
+
 @app.route("/")
-def helloworld():
-    return "Hello World. Use /test/<some string> for more."
+@token_required
+def helloworld(user):
+    return user
 
 @app.route("/test/<pathvariable>", methods=['GET','PUT'])
 def somevar(pathvariable):
@@ -83,8 +85,8 @@ def get_classes():
         
     return {'result': [{'department': row[0], 'course_number': row[1], 'id': row[2]} for row in classes]}
 
-@token_required
 @app.route("/user", methods=['PUT'])
+@token_required
 def create_user_settings(user):
     # Request Body: user occupation, user email, user classes (as a list)
    with sqlite3.connect(db_path) as con:
@@ -102,8 +104,8 @@ def create_user_settings(user):
             cur.execute("INSERT INTO user_class VALUES (%s, %s, %s, %s)", (userclassuuid, class_id, user_id, occupation))
     # Eugene
 
-@token_required
 @app.route("/meeting", methods=['POST', 'PUT'])
+@token_required
 def create_meeting(user):
     con = sqlite3.connect(db_path)
     cur = con.cursor()
@@ -184,7 +186,7 @@ def show_all_meetings():
         #change the registered atrribute baseed on whether the id of the meeting is within meeting_ids (determines if user is registered)
         if info[4] in meeting_ids:
             meetings["meetings"].append({'TA': leader_name, 'title': meeting_title, 'location' : meeting_location, 
-            'start_time': start, 'end_time': end, "capacity": meeting_capacity, "registered": True })
+            'start_time': start, 'end_time': end, "capacity": meeting_capacity, "registered": True})
         else:
             meetings["meetings"].append({'TA': leader_name, 'title': meeting_title, 'location' : meeting_location, 
             'start_time': start, 'end_time': end, "capacity": meeting_capacity, "registered": False })
@@ -199,8 +201,8 @@ def get_appointment():
     pass
     # Adhiraj
 
-@token_required
 @app.route("/appointment/<meeting_id>", methods=['POST'])
+@token_required
 def book_appointment(meeting_id, user):
     # Request parameter: meeting_id
     #user_id = slkdl
@@ -219,8 +221,8 @@ def book_appointment(meeting_id, user):
     return resp
     # Adhiraj
 
-@token_required
 @app.route("/appointment/<meeting_id>", methods=['DELETE'])
+@token_required
 def cancel_appointment(meeting_id, user):
     # Request parameter: meeting_id
     # user_id = slkdl
