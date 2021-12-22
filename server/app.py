@@ -170,9 +170,9 @@ def show_all_meetings():
     con = sqlite3.connect(db_path)
     cur = con.cursor()
     #get the ids for all meetings where the user is registered through relational table query
-    meeting_ids = cur.execute("SELECT meeting_id FROM user_meeting WHERE user_meeting.user_id = '33079827-e011-4447-a6ec-1578fe17a342';").fetchall()
+    meeting_ids_query = cur.execute("SELECT meeting_id FROM user_meeting WHERE user_meeting.user_id = '33079827-e011-4447-a6ec-1578fe17a342';").fetchall()
     meeting_info = cur.execute("SELECT title, location, date_time_start, date_time_end, meeting.id, user.email, capacity FROM meeting, user_class, user WHERE meeting.class_id = user_class.class_id AND user_class.user_id = '33079827-e011-4447-a6ec-1578fe17a342' AND user.id = meeting.leader_id").fetchall()
-   
+    meeting_ids = [id[0] for id in meeting_ids_query]
     #go through all meetings which pertain to the student/ta's relevant courses").fetchall()
     for info in meeting_info:
         leader_name = info[5]
@@ -182,7 +182,7 @@ def show_all_meetings():
         end = info[3]
         meeting_capacity = info[6]
         #change the registered atrribute baseed on whether the id of the meeting is within meeting_ids (determines if user is registered)
-        if any([info[4] == id[0] for id in meeting_ids ]):
+        if info[4] in meeting_ids:
             meetings["meetings"].append({'TA': leader_name, 'title': meeting_title, 'location' : meeting_location, 
             'start_time': start, 'end_time': end, "capacity": meeting_capacity, "registered": True })
         else:
@@ -238,3 +238,4 @@ def cancel_appointment(meeting_id, user):
 
 if __name__ == '__main__':
     app.run(host='localhost', debug=True, port=5001)
+

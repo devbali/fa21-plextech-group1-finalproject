@@ -11,7 +11,6 @@ export default class Calendar extends Component{
                 <Calend
                     events={meetings}
                     initialDate={new Date().toISOString()}
-                    // initialView={CALENDAR_VIEW.WEEK}
                 />
             </div>
         );
