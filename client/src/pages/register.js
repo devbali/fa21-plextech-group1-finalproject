@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { fetcher } from "../util/fetcher";
 
 function Register() {
   // need to find way to receive user information from oauth2 process (dev)
@@ -23,7 +24,7 @@ function Register() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("/classes")
+    fetcher("/classes")
       .then((res) => res.json())
       .then((data) => {
         setAllCourses(data["result"]);
