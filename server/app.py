@@ -170,9 +170,9 @@ def show_all_meetings():
     con = sqlite3.connect(db_path)
     cur = con.cursor()
     #get the ids for all meetings where the user is registered through relational table query
-    meeting_ids_query = cur.execute("SELECT meeting_id FROM user_meeting WHERE user_meeting.user_id = '33079827-e011-4447-a6ec-1578fe17a342';").fetchall()
-    meeting_info = cur.execute("SELECT title, location, date_time_start, date_time_end, meeting.id, user.email, capacity FROM meeting, user_class, user WHERE meeting.class_id = user_class.class_id AND user_class.user_id = '33079827-e011-4447-a6ec-1578fe17a342' AND user.id = meeting.leader_id").fetchall()
-    meeting_ids = [id[0] for id in meeting_ids_query]
+    meeting_id_query = cur.execute("SELECT meeting_id FROM user_meeting WHERE user_meeting.user_id = '3fff27bb-19f7-4f25-8b52-8194ae23d5a4';").fetchall()
+    meeting_info = cur.execute("SELECT title, location, date_time_start, date_time_end, meeting.id, user.email, capacity FROM meeting, user_class, user WHERE meeting.class_id = user_class.class_id AND user_class.user_id = '3fff27bb-19f7-4f25-8b52-8194ae23d5a4' AND user.id = meeting.leader_id").fetchall()
+    meeting_ids = [id[0] for id in meeting_id_query]
     #go through all meetings which pertain to the student/ta's relevant courses").fetchall()
     for info in meeting_info:
         leader_name = info[5]
