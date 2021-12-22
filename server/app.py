@@ -75,10 +75,31 @@ def somevar(pathvariable):
 
     return f"Hello, World! We have {users[0]} users. You used path variable {pathvariable}. Random UUID: {uuid.uuid4()}"
 
-@app.route("/user", methods=['POST', 'PUT'])
-def create_user_settings():
+@app.route("/classes", methods=['GET'])
+def get_classes():
+    with sqlite3.connect(db_path) as con:
+        cur = con.cursor()
+        classes = cur.execute("SELECT department, course_number, id FROM class;").fetchall()
+        
+    return {'result': [{'department': row[0], 'course_number': row[1], 'id': row[2]} for row in classes]}
+
+@token_required
+@app.route("/user", methods=['PUT'])
+def create_user_settings(user):
     # Request Body: user occupation, user email, user classes (as a list)
-    pass
+   with sqlite3.connect(db_path) as con:
+        cur = con.cursor()
+        data = Flask.request.json
+        occupation = data["occupation"]
+        class_ids = data["class_ids"]
+        user_id = user["id"]
+        user_email = user["email"]
+        occupation = user["occupation"]
+
+        cur.execute("UPDATE user SET occupation = (%s) WHERE email = (%s)", (occupation, user_email))
+        for class_id in class_ids:
+            userclassuuid = uuid.uuid4()
+            cur.execute("INSERT INTO user_class VALUES (%s, %s, %s, %s)", (userclassuuid, class_id, user_id, occupation))
     # Eugene
 
 @token_required
@@ -168,10 +189,6 @@ def show_all_meetings():
             meetings["meetings"].append({'TA': leader_name, 'title': meeting_title, 'location' : meeting_location, 
             'start_time': start, 'end_time': end, "capacity": meeting_capacity, "registered": False })
     return meetings
-
-
-
-
     # Rohan
 
 @app.route("/appointment/<meeting_id>", methods=['GET'])
@@ -182,8 +199,9 @@ def get_appointment():
     pass
     # Adhiraj
 
+@token_required
 @app.route("/appointment/<meeting_id>", methods=['POST'])
-def book_appointment(meeting_id):
+def book_appointment(meeting_id, user):
     # Request parameter: meeting_id
     #user_id = slkdl
     # meeting_id passed in, add to db
@@ -192,7 +210,7 @@ def book_appointment(meeting_id):
     appointmentData = json.loads(request.data.decode('utf-8'))
     appointment_id = str(uuid.uuid4())
     meeting_id = appointmentData["meetingID"]
-    user_id = '3fff27bb-19f7-4f25-8b52-8194ae23d5a4'
+    user_id = user["id"]
     cur = con.cursor() 
     cur.execute("insert into user_meeting values (?,?,?)", (appointment_id, user_id, meeting_id))
     con.commit()
@@ -201,14 +219,14 @@ def book_appointment(meeting_id):
     return resp
     # Adhiraj
 
+@token_required
 @app.route("/appointment/<meeting_id>", methods=['DELETE'])
-
-def cancel_appointment(meeting_id):
+def cancel_appointment(meeting_id, user):
     # Request parameter: meeting_id
     # user_id = slkdl
     con = sqlite3.connect(db_path)
     cur = con.cursor()
-    user_id = '3fff27bb-19f7-4f25-8b52-8194ae23d5a4'
+    user_id = user["id"]
     cur.execute("DELETE FROM user_meeting WHERE user_id = ? and meeting_id = ?;",(user_id,meeting_id))
     con.commit()
     con.close()
@@ -216,6 +234,7 @@ def cancel_appointment(meeting_id):
     return resp
     pass
     # Adhiraj
+
 
 if __name__ == '__main__':
     app.run(host='localhost', debug=True, port=5001)

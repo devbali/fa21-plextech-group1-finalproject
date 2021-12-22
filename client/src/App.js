@@ -1,24 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
-import Schedule from './pages/schedule';
-/*import { FormDemo } from './pages/meeting';*/
+
 import React from "react";
 
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
+  // Link
 } from "react-router-dom";
 
+import Home from './pages/home';
 import LoginPage from './pages/login';
-import TopBar from './components/TopBar';
+// import NewUser from './pages/usersetup';
+// import Dashboard from './pages/dashboard';
+// import Schedule from './pages/schedule';
+/*import { FormDemo } from './pages/meeting';*/
+import NavBar from './components/NavBar';
+import Register from './pages/register';
+// import LoginPage from './components/Login';
+
 
 export default function App() {
   return (
     <Router>
       <div>
-        <TopBar/>
+        <NavBar/>
         {/*<ul>
           <li>
             <Link to="/">Home</Link>
@@ -43,39 +49,12 @@ export default function App() {
         <Routes>
           <Route exact path="/" element={<Home/>} />
           <Route exact path="/login" element={<LoginPage/>} />
-          <Route path="/newuser" element={<NewUser/>}/>
-         <Route path="/schedule" element={<Schedule/>}/> 
+          <Route path="/register" element={<Register/>}/>
+         {/* <Route path="/schedule" element={<Schedule/>}/>  */}
          { /*<Route path="/meeting" element={<FormDemo/>}/>*/}
-          <Route path="/dashboard" element={<Dashboard/>}/>
+          {/* <Route path="/dashboard" element={<Dashboard/>}/> */}
         </Routes>
       </div>
     </Router>
-  );
-}
-
-// You can think of these components as "pages"
-// in your app.
-
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
-}
-
-function NewUser() {
-  return (
-    <div>
-      <h2>Eugene's Page</h2>
-    </div>
-  );
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
   );
 }

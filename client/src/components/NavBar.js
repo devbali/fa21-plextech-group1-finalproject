@@ -11,7 +11,7 @@ import Logout from './Logout';
 import { inMemoryUserManager } from '../util/fetcher';
 import { Link } from 'react-router-dom';
 
-export default function TopBar() {
+export default function NavBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
