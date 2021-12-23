@@ -89,23 +89,6 @@ def get_classes():
 @token_required
 def create_user_settings(user):
     # Request Body: user occupation, user email, user classes (as a list)
-<<<<<<< HEAD
-    data = Flask.request.json
-    occupation = data['occupation']
-    email = data['email']
-    class_ids = data['class_ids']
-
-    with sqlite3.connect(db_path) as con:
-        try:
-            cur = con.cursor()
-            cur.execute("INSERT INTO user (occupation, email) VALUES (%s, %s)" %(occupation, email))
-            user_id = cur.execute("SELECT user_id FROM user WHERE email = (%s)" %(email))
-            for class_id in class_ids:
-                cur.execute("INSERT INTO user_class (class_id, user_id, role) VALUES (%s, %s, %s)" %(class_id, user_id, occupation))
-            con.commit()
-        except:
-            return 403
-=======
    with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         data = Flask.request.json
@@ -119,7 +102,6 @@ def create_user_settings(user):
         for class_id in class_ids:
             userclassuuid = uuid.uuid4()
             cur.execute("INSERT INTO user_class VALUES (%s, %s, %s, %s)", (userclassuuid, class_id, user_id, occupation))
->>>>>>> 96f6df817f240ab7b6e66dcd6ef77d70335fdbe4
     # Eugene
 
 @app.route("/meeting", methods=['POST', 'PUT'])
@@ -257,9 +239,5 @@ def cancel_appointment(meeting_id, user):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    app.run(host='localhost', debug=True, port=5000)
-=======
     app.run(host='localhost', debug=True, port=5001)
 
->>>>>>> 96f6df817f240ab7b6e66dcd6ef77d70335fdbe4
