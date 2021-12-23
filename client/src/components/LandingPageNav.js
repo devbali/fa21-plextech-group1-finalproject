@@ -16,9 +16,9 @@ import { useNavigate } from "react-router-dom";
 export default function NavBar() {
   let navigate = useNavigate();
   let user = inMemoryUserManager.getUser();
-  if (user != null) {
-    navigate("/meetings");
-  }
+  // if (user != null) {
+  //   navigate("/meetings");
+  // }
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
