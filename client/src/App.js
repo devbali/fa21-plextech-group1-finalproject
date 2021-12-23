@@ -25,20 +25,6 @@ export default function App() {
     <Router>
 
       <div>
-        {/*<ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
-        </ul>
-
-        <hr />*/}
-
         {/*
           A <Routes> looks through all its children <Routes>
           elements and renders the first one whose path

@@ -14,10 +14,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetcher } from "../util/fetcher";
-import config from '../server-config';
 import { inMemoryUserManager } from "../util/fetcher";
-import NavBar from '../components/NavBar';
-
+import NavBar from "../components/NavBar";
 
 function Register() {
   const [allCourses, setAllCourses] = useState([]);
@@ -27,13 +25,6 @@ function Register() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    // get user info to display onto registration page
-    // fetcher(config.serverurl)
-    // .then((res) => res.json())
-    // .then((data) => {
-    //   console.log(data);
-    // })
-  
     // fetch classes in database
     fetcher("/classes")
       .then((res) => res.json())
@@ -50,38 +41,43 @@ function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // put information into the database about the user and their class relationships
-    fetch("/user", {
+    fetcher("/user", {
       method: "PUT",
-      headers: {
-        content_type: "application/json",
-      },
-      // grab Request Body: user occupation, user email, user classes (as a list) and send it in a json object to our server
-      body: JSON.stringify(),
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ occupation: occupation, courses: courses }),
     })
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        // if success then send them to dashboard with their info
-        if (json[0] === "success") {
+      .then((res) => res.json())
+      .then((data) => {
+        if (data["status"] === 200) {
           if (
-            location.state === undefined ||
-            location.state.referrer === undefined
-          )
-            history("/dashboard");
-          else history(location.state.referrer);
+            location.state == undefined ||
+            location.state.referrer == undefined
+          ) {
+            history("/schedule");
+          } else {
+            history(location.state.referrer);
+          }
+        } else {
+          alert(data["message"]);
+          window.location.reload();
         }
-        // if failure then refresh page with failure dialog
       });
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <NavBar/>
-      <div>
+    <div>
+      <NavBar />
+      <div style={{ padding: "2rem" }}>
         <Card elevation={5} sx={{ maxWidth: 500, margin: "auto" }}>
           <CardContent>
-            <h1 style={{ textAlign: "center" }}>Hi{inMemoryUserManager.getUser() != null ? ` ${inMemoryUserManager.getUser()["profileObj"]["givenName"]}` : ""},</h1>
+            <h1 style={{ textAlign: "center" }}>
+              Hi
+              {inMemoryUserManager.getUser() != null
+                ? ` ${inMemoryUserManager.getUser()["profileObj"]["givenName"]}`
+                : ""}
+              ,
+            </h1>
             <h3>Let's get started!</h3>
 
             <form id="register" onSubmit={handleSubmit}>
