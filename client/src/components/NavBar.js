@@ -17,9 +17,10 @@ export default function NavBar() {
   let navigate = useNavigate();
   let location = useLocation();
   let user = inMemoryUserManager.getUser();
-  if (user == null) {
-    navigate("/", {state: { referrer: location.pathname }});
-  }
+  //if (user == null) {
+  //  navigate("/", {state: { referrer: location.pathname }});
+  //}
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

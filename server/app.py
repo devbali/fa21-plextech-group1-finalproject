@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, make_response
 import sqlite3
 import os.path
 import os
@@ -46,8 +46,8 @@ def token_required(f):
                     current_user["id"] = users[0]
                     current_user["occupation"] = users[1]
         
-        if current_user["uninitialized"]:
-            return redirect('/newuser')
+        # if current_user["uninitialized"]:
+        #     return redirect('/register')
         return f(current_user, *args, **kwargs)
     return decorator
 
@@ -57,14 +57,17 @@ def after_request(response):
     header["Access-Control-Allow-Credentials"] =  True
     header["Access-Control-Allow-Origin"] = "http://localhost:8080"
     header["Access-Control-Allow-Headers"] = "*"
+    header["Access-Control-Allow-Methods"] = "*"    
     header["Content-Type"] = "text/json"
     return response
 
+@token_required
+def get_user(user):
+    return user
 
 @app.route("/")
-@token_required
-def helloworld(user):
-    return user
+def helloworld():
+    return 'Hello, World!'
 
 @app.route("/test/<pathvariable>", methods=['GET','PUT'])
 def somevar(pathvariable):
@@ -77,6 +80,15 @@ def somevar(pathvariable):
 
     return f"Hello, World! We have {users[0]} users. You used path variable {pathvariable}. Random UUID: {uuid.uuid4()}"
 
+@app.route("/users", methods=['GET', 'OPTIONS'])
+@token_required
+def get_users(user):
+    # if user["uninitialized"] == False:
+    #     return redirect('/register')
+    # else:
+    #     return redirect('/schedule')
+    return jsonify({'status': 200, 'uninitialized': user['uninitialized'], 'message': user}), 200
+
 @app.route("/classes", methods=['GET'])
 def get_classes():
     with sqlite3.connect(db_path) as con:
@@ -85,23 +97,27 @@ def get_classes():
         
     return {'result': [{'department': row[0], 'course_number': row[1], 'id': row[2]} for row in classes]}
 
-@app.route("/user", methods=['PUT'])
-@token_required
-def create_user_settings(user):
+@app.route("/user", methods=['OPTIONS', 'PUT'])
+def create_user_settings():
     # Request Body: user occupation, user email, user classes (as a list)
    with sqlite3.connect(db_path) as con:
-        cur = con.cursor()
-        data = Flask.request.json
-        occupation = data["occupation"]
-        class_ids = data["class_ids"]
-        user_id = user["id"]
-        user_email = user["email"]
-        occupation = user["occupation"]
+        try:
+            cur = con.cursor()
+            data = request.json
+            occupation = data["occupation"]
+            courses = data["courses"]
+            user_id = get_user()['id']
+            user_email = get_user()['email']
 
-        cur.execute("UPDATE user SET occupation = (%s) WHERE email = (%s)", (occupation, user_email))
-        for class_id in class_ids:
-            userclassuuid = uuid.uuid4()
-            cur.execute("INSERT INTO user_class VALUES (%s, %s, %s, %s)", (userclassuuid, class_id, user_id, occupation))
+            cur.execute("UPDATE user SET occupation = ? WHERE id = ? AND email = ?", (occupation, user_id, user_email))
+
+            for course in courses:
+                userclassuuid = str(uuid.uuid4())
+                cur.execute("INSERT INTO user_class VALUES (?, ?, ?, ?)", (userclassuuid, course["id"], user_id, occupation))
+
+            return jsonify({'status': 200,'message': 'user settings updated'}), 200
+        except Exception as e:
+            return jsonify({'status': 401,'message': str(e)}), 401
     # Eugene
 
 @app.route("/meeting", methods=['POST', 'PUT'])
