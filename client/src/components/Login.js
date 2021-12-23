@@ -16,7 +16,7 @@ function Login() {
     console.log('Login Success: currentUser:', res.profileObj);
     inMemoryUserManager.setUser(res);
     refreshTokenSetup(res);
-    console.log(history);
+    console.log("HISTORY",history);
     if (location.state == undefined || location.state.referrer == undefined)
       history("/schedule");
     else

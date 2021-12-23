@@ -9,15 +9,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import Logout from './Logout';
 import { inMemoryUserManager } from '../util/fetcher';
-import { Link, Navigate} from 'react-router-dom';
+import { Link, Navigate, NavLink} from 'react-router-dom';
 import Login from './Login';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 
 export default function NavBar() {
   let navigate = useNavigate();
+  let location = useLocation();
   let user = inMemoryUserManager.getUser();
   if (user == null) {
-    navigate("/");
+    navigate("/", {state: { referrer: location.pathname }});
   }
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -33,7 +34,10 @@ export default function NavBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <NavLink to="/schedule" style={{ textDecoration: 'none', color:'inherit'}}>
             Plex Hours
+            </NavLink>
+
           </Typography>
            <Logout/>
         </Toolbar>
