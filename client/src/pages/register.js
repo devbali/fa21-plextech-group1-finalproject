@@ -51,10 +51,10 @@ function Register() {
       .then((data) => {
         if (data["status"] === 200) {
           if (
-            location.state == undefined ||
-            location.state.referrer == undefined
+            location.state === null ||
+            location.state.referrer === null
           ) {
-            history("/schedule");
+            history("/dashboard");
           } else {
             history(location.state.referrer);
           }

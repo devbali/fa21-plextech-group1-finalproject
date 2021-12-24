@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { GoogleLogin } from "react-google-login";
 // refresh token
 import { refreshTokenSetup } from "../util/refreshToken";
@@ -18,19 +18,16 @@ function Login() {
     refreshTokenSetup(res);
     console.log(history);
     // need to check if user in database
-    // if (location.state == undefined || location.state.referrer == undefined)
-    //   history("/register");
-    // else
-    //   history(location.state.referrer);
-    fetcher("/users")
+    fetcher("/user", {method: 'GET'})
       .then((res) => res.json())
       .then((data) => {
-        if (data["uninitialized"] === true) {
-          history("/register");
-        } else {
-          history("/schedule");
-        }
-        console.log(data)
+        if (location.state === null || location.state.referrer === null) {
+          if (data["uninitialized"] === true) {
+            history("/register")
+          } else {
+            history("/dashboard")
+          }
+        } else history(location.state.referrer)
       });
   };
 
